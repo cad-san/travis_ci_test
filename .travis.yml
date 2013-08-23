@@ -4,6 +4,9 @@ compiler:
 - gcc
 env: 
 install:
+- apt-get install libboost-dev
+- apt-get install libboost-thread-dev
+- apt-get install libboost-system-dev
 before_script:
 - git submodule init
 - git submodule update
