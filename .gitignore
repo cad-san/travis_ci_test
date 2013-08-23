@@ -13,3 +13,6 @@ lib/
 #gcov
 gcov/
 *_tests.txt
+
+#junit
+cpputest_*.xml
