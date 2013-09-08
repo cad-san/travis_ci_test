@@ -12,4 +12,4 @@ before_script:
 script: 
 - make gcov&& ./subsumption_tests -ojunit
 after_success:
-- coveralls --gcov ./gcov/*.gcov
+- coveralls --root gcov
