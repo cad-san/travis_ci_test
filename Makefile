@@ -30,7 +30,7 @@ release: clean
 cleanRelease:
 	make -i -f scripts/MakefileRelease.mk clean
 
-gcov: clean
+gcov: clean CppUTest CppUTestExt
 	make -i -f scripts/MakefileCppUTest.mk gcov
 
 format:
