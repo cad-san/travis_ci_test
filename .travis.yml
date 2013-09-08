@@ -10,6 +10,6 @@ install:
 - sudo easy_install cpp-coveralls
 before_script:
 script: 
-- make gcov&& ./subsumption_tests -ojunit
+- make gcov || exit 1
 after_success:
 - coveralls --root gcov
