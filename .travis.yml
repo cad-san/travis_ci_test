@@ -4,8 +4,8 @@ compiler:
   - gcc
 env:
   matrix:
-  - BUILDTARGET=test
-  - BUILDTARGET=release
+  - BUILD_TARGET=test
+  - BUILD_TARGET=release
 install:
   - sudo apt-get install libboost-dev
   - sudo apt-get install libboost-thread-dev
