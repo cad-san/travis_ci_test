@@ -1,15 +1,18 @@
 --- 
 language: cpp
 compiler: 
-- gcc
-env: 
+  - gcc
+env:
+  matrix:
+  - BUILDTARGET=test
+  - BUILDTARGET=release
 install:
-- sudo apt-get install libboost-dev
-- sudo apt-get install libboost-thread-dev
-- sudo apt-get install libboost-system-dev
-- sudo easy_install cpp-coveralls
+  - sudo apt-get install libboost-dev
+  - sudo apt-get install libboost-thread-dev
+  - sudo apt-get install libboost-system-dev
+  - sudo easy_install cpp-coveralls
 before_script:
 script: 
-- make gcov || exit 1
+  - ./scripts/travis_ci_build.sh
 after_success:
-- coveralls --root gcov
+  - ./scripts/coveralls.sh
