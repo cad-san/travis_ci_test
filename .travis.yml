@@ -8,7 +8,16 @@ env:
   - BUILD_TARGET=release
   - BUILD_TARGET=sample_qt
 install:
-- ./scripts/travis_ci_install.sh
+  - sudo apt-get install libboost-dev
+  - sudo apt-get install libboost-thread-dev
+  - sudo apt-get install libboost-system-dev
+  - sudo easy_install cpp-coveralls
+  -
+    if [ "$BUILD_TARGET" = "sample_qt" ];
+    then
+        sudo apt-get install qt4-qmake
+        sudo apt-get install libqt4-dev libqt4-gui
+    fi
 before_script:
 script:
   - ./scripts/travis_ci_build.sh
