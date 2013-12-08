@@ -15,8 +15,8 @@ install:
   -
     if [ "$BUILD_TARGET" = "sample_qt" ];
     then
-        sudo apt-get install qt4-qmake
-        sudo apt-get install libqt4-dev libqt4-gui
+        sudo apt-get install qt4-qmake;
+        sudo apt-get install libqt4-dev libqt4-gui;
     fi
 before_script:
 script:
