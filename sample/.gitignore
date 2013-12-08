@@ -1,0 +1,10 @@
+# Generated MOC, resource and UI files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Generated Makefile
+Makefile
+
+# Generated Files
+*.o
