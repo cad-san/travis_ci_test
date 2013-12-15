@@ -18,9 +18,6 @@ src_to = $(addprefix $(OBJS_DIR)/,$(call __src_to,$1,$2))
 src_to_o = $(call src_to,.o,$1)
 
 #---- Setting ----#
-CC  := gcc
-CXX := g++
-
 TARGET = \
 	$(LIB_DIR)/lib$(COMPONENT_NAME).a
 
@@ -30,7 +27,11 @@ INCLUDES += $(foreach dir, $(INCLUDES_DIRS_EXPANDED), -I$(dir))
 SRCS += $(call get_src_from_dir_list, $(SRC_DIRS)) $(SRC_FILES)
 OBJS = $(call src_to_o,$(SRCS))
 
-CPPFLAGS += $(INCLUDES) -Wall -Werror -pedantic
+CPPWARNINGFLAGS +=	-Wall -W -Werror -pedantic-errors\
+					-Wcast-qual -Wcast-align -Wwrite-strings\
+					-Wconversion -Wfloat-equal -Wpointer-arith
+
+CPPFLAGS += $(INCLUDES) $(CPPWARNINGFLAGS)
 LDFLAGS  = -lboost_thread-mt -lboost_system-mt
 
 all: $(TARGET)
