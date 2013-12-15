@@ -9,47 +9,47 @@ class MockRunner : public Runner
 private:
     typedef boost::mutex::scoped_lock lock;
 
-    boost::mutex message_guard;
-    boost::condition_variable_any condition_performed;
+    boost::mutex message_guard_;
+    boost::condition_variable_any condition_performed_;
 
-    bool performed_flag;
-    bool initialized_flag;
+    bool performed_flag_;
+    bool initialized_flag_;
 
 public:
     MockRunner()
     {
-        performed_flag = false;
-        initialized_flag = false;
+        performed_flag_ = false;
+        initialized_flag_ = false;
     }
 
     void init()
     {
-        initialized_flag = true;
+        initialized_flag_ = true;
     }
 
     void step()
     {
-        performed_flag = true;
-        condition_performed.notify_one();
+        performed_flag_ = true;
+        condition_performed_.notify_one();
     }
 
     bool performed()
     {
-        return performed_flag;
+        return performed_flag_;
     }
 
     bool initialized()
     {
-        return initialized_flag;
+        return initialized_flag_;
     }
 
     void waitPerforming(const UtilTime& time)
     {
-        if(performed_flag)
+        if(performed_flag_)
             return;
 
-        lock lk(message_guard);
-        condition_performed.timed_wait(lk, static_cast<boost::xtime>(time));
+        lock lk(message_guard_);
+        condition_performed_.timed_wait(lk, static_cast<boost::xtime>(time));
     }
 };
 typedef boost::shared_ptr<MockRunner> MockRunnerPtr;

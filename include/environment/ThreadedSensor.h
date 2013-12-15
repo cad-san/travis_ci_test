@@ -8,21 +8,23 @@
 class ThreadedSensor : public Sensor
 {
 private:
-    ControllerPtr controllPtr;
-    Thread thread;
+    ControllerPtr controller_;
+    Thread thread_;
 
 public:
-    ThreadedSensor(const std::string& name, const ControllerPtr& controller);
+    ThreadedSensor(const std::string& name, const ControllerPtr& controller_ptr);
     virtual ~ThreadedSensor();
 
     bool init();
     bool start();
     bool stop();
 
-    const bool isReady() const;
-    const bool isActive() const;
+    bool isReady() const;
+    bool isActive() const;
 
     void setIntervalMiliSec(const int interval_msec);
 };
+
+typedef boost::shared_ptr<ThreadedSensor> ThreadedSensorPtr;
 
 #endif

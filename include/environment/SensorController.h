@@ -6,7 +6,7 @@
 class SensorController : public Runner
 {
 public:
-    virtual ~SensorController(){};
+    virtual ~SensorController(){}
     virtual void init() = 0;
     virtual void step() = 0;
 };

@@ -3,8 +3,8 @@
 
 MockSensor::MockSensor(const std::string& name) : Sensor(name)
 {
-    this->ready_flag = false;
-    this->active_flag = false;
+    this->ready_flag_ = false;
+    this->active_flag_ = false;
 }
 
 MockSensor::~MockSensor()
@@ -13,32 +13,32 @@ MockSensor::~MockSensor()
 
 bool MockSensor::init()
 {
-    ready_flag = true;
-    active_flag = false;
+    ready_flag_ = true;
+    active_flag_ = false;
     mock().actualCall("Sensor#init()").onObject(this);
     return true;
 }
 
 bool MockSensor::start()
 {
-    active_flag = true;
+    active_flag_ = true;
     mock().actualCall("Sensor#start()").onObject(this);
     return true;
 }
 
 bool MockSensor::stop()
 {
-    active_flag = false;
+    active_flag_ = false;
     mock().actualCall("Sensor#stop()").onObject(this);
     return true;
 }
 
-const bool MockSensor::isReady() const
+bool MockSensor::isReady() const
 {
-    return ready_flag;
+    return ready_flag_;
 }
 
-const bool MockSensor::isActive() const
+bool MockSensor::isActive() const
 {
-    return active_flag;
+    return active_flag_;
 }

@@ -2,6 +2,8 @@
 #include "Thread.h"
 #include "MockRunner.h"
 
+#include <boost/make_shared.hpp>
+
 TEST_GROUP(Thread)
 {
     MockRunnerPtr runner;
@@ -9,7 +11,7 @@ TEST_GROUP(Thread)
 
     void setup()
     {
-        runner = MockRunnerPtr(new MockRunner());
+        runner = boost::make_shared<MockRunner>();
         thread = new Thread(runner);
     }
 
@@ -80,6 +82,18 @@ TEST(Thread, StartWithoutInit)
     CHECK_EQUAL(false, runner->performed());
 }
 
+TEST(Thread, StartUntilActive)
+{
+    CHECK_EQUAL(true, thread->init());
+    CHECK_EQUAL(true, thread->isReady());
+
+    CHECK_EQUAL(true, thread->start());
+    CHECK_EQUAL(true, thread->isActive());
+
+    CHECK_EQUAL(false, thread->start());
+    CHECK_EQUAL(true, thread->isActive());
+}
+
 TEST(Thread, StopWithoutStart)
 {
     CHECK_EQUAL(true, thread->init());
@@ -116,4 +130,17 @@ TEST(Thread, InitAfterStarted)
     CHECK_EQUAL(false, thread->init());
 
     CHECK_EQUAL(true, thread->stop());
+}
+
+TEST(Thread, Start2ndTime)
+{
+    CHECK_EQUAL(true, thread->init());
+    CHECK_EQUAL(true, thread->start());
+    CHECK_EQUAL(true, thread->stop());
+
+    CHECK_EQUAL(true, thread->start());
+    CHECK_EQUAL(true, thread->isActive());
+
+    CHECK_EQUAL(true, thread->stop());
+    CHECK_EQUAL(false, thread->isActive());
 }

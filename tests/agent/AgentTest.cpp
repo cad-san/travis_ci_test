@@ -5,6 +5,7 @@
 #include "SpyBehavior.h"
 
 #include <vector>
+#include <boost/make_shared.hpp>
 
 static const unsigned int dummy_id_01 = 0x01;
 static const unsigned int dummy_id_02 = 0x02;
@@ -46,7 +47,7 @@ TEST_GROUP(Agent)
 
     SpyBehaviorPtr createBehaviorPtr(unsigned int id_list)
     {
-        return SpyBehaviorPtr(new SpyBehavior(id_list));
+        return boost::make_shared<SpyBehavior>(id_list);
     }
 
     void setBehaviorsToAgent(SpyBehaviorList* behaviors)

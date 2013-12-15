@@ -12,22 +12,24 @@ class Agent : public Runner
 public:
     static const int INVALID_LAYER;
 private:
-    std::vector< BehaviorPtr > behaviors;
+    std::vector< BehaviorPtr > behaviors_;
 
-    const int convertFromIDtoLayer(const unsigned int id) const;
-    const bool isValidLayer(const unsigned int layer) const;
+    int convertFromIDtoLayer(const unsigned int id) const;
+    bool isValidLayer(const unsigned int layer) const;
 public:
     Agent();
     virtual ~Agent();
 
-    void init();
-    void step();
+    virtual void init();
+    virtual void step();
 
-    const int getNumBehaviors() const;
+    int getNumBehaviors() const;
     void addBehavior(const BehaviorPtr& new_behavior);
     void removeBehaviorAt(const unsigned int layer);
     const BehaviorPtr getBehaviorAt(const unsigned int layer) const;
     const BehaviorPtr getBehaviorByID(const unsigned int id) const;
 };
+
+typedef boost::shared_ptr<Agent> AgentPtr;
 
 #endif

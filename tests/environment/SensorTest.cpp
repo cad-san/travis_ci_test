@@ -2,6 +2,8 @@
 #include "ThreadedSensor.h"
 #include "MockSensorController.h"
 
+#include <boost/make_shared.hpp>
+
 static const char* dummy_name = "dummy_sensor";
 
 TEST_GROUP(Sensor)
@@ -10,7 +12,7 @@ TEST_GROUP(Sensor)
 
     void setup()
     {
-        ControllerPtr controller(new MockSensorController());
+        ControllerPtr controller = boost::make_shared<MockSensorController>();
         sensor = new ThreadedSensor(dummy_name, controller);
     }
     void teardown()

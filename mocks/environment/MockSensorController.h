@@ -6,32 +6,32 @@
 class MockSensorController : public SensorController
 {
 private:
-    bool performed_flag;
-    bool initialized_flag;
+    bool performed_flag_;
+    bool initialized_flag_;
 public:
     MockSensorController()
     {
-        performed_flag = false;
-        initialized_flag = false;
+        performed_flag_ = false;
+        initialized_flag_ = false;
     }
     void init()
     {
-        performed_flag = false;
-        initialized_flag = true;
+        performed_flag_ = false;
+        initialized_flag_ = true;
     }
     void step()
     {
-        performed_flag = true;
+        performed_flag_ = true;
     }
 
     bool performed()
     {
-        return performed_flag;
+        return performed_flag_;
     }
 
     bool initialized()
     {
-        return initialized_flag;
+        return initialized_flag_;
     }
 };
 

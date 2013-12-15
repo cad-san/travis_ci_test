@@ -5,6 +5,8 @@
 #include "Environment.h"
 #include "MockSensor.h"
 
+#include <boost/make_shared.hpp>
+
 static const char* dummy_name_01 = "dummy_01";
 static const char* dummy_name_02 = "dummy_02";
 
@@ -40,7 +42,7 @@ TEST_GROUP(Environment)
 
     MockSensorPtr createSensorPtr(const std::string& name)
     {
-        return MockSensorPtr(new MockSensor(name));
+        return boost::make_shared<MockSensor>(name);
     }
 
     void addSensorsToEnv(MockSensorList* sensors)

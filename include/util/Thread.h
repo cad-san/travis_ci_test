@@ -13,17 +13,17 @@ private:
     typedef boost::mutex::scoped_lock lock;
     typedef boost::shared_ptr<boost::thread> ThreadPtr;
 
-    bool end_flag;
-    bool ready_flag;
-    bool active_flag;
+    bool end_flag_;
+    bool ready_flag_;
+    bool active_flag_;
 
-    ThreadPtr main_thread;
-    boost::mutex message_guard;
-    boost::condition_variable_any active_request;
-    boost::condition_variable_any end_request;
+    ThreadPtr main_thread_;
+    boost::mutex message_guard_;
+    boost::condition_variable_any active_request_;
+    boost::condition_variable_any end_request_;
 
-    RunnerPtr runner;
-    UtilTime interval;
+    RunnerPtr runner_;
+    UtilTime interval_;
 
     void initFlags();
 
@@ -38,15 +38,15 @@ private:
     void main();
 
 public:
-    Thread(const RunnerPtr& runner);
+    Thread(const RunnerPtr& runner_ptr);
     virtual ~Thread();
 
     bool init();
     bool start();
     bool stop();
 
-    const bool isReady() const;
-    const bool isActive() const;
+    bool isReady() const;
+    bool isActive() const;
 
     void setIntervalMiliSec(const int interval_msec);
 

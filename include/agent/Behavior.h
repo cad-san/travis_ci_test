@@ -5,17 +5,22 @@
 
 class Behavior {
 protected:
-    unsigned int id;
+    unsigned int id_;
 public:
+    Behavior(const unsigned int behavior_id)
+    {
+        this->id_ = behavior_id;
+    }
+
     virtual ~Behavior(){}
 
     virtual void init() = 0;
     virtual void sensing() = 0;
     virtual void perform() = 0;
 
-    virtual const bool isActive() const = 0;
+    virtual bool isActive() const = 0;
 
-    const unsigned int getID() const { return id; }
+    unsigned int getID() const { return id_; }
 };
 
 typedef boost::shared_ptr<Behavior> BehaviorPtr;

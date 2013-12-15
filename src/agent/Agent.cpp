@@ -14,34 +14,34 @@ Agent::~Agent()
 
 void Agent::init()
 {
-    for(unsigned int i = 0; i < behaviors.size(); i++)
+    for(unsigned int i = 0; i < behaviors_.size(); i++)
     {
-        behaviors.at(i)->init();
+        behaviors_.at(i)->init();
     }
 }
 
 void Agent::step()
 {
-    int active_behavior = INVALID_LAYER;
-    for(unsigned int i = 0; i < behaviors.size(); i++)
+    Behavior* active_behavior = NULL;
+    for(unsigned int i = 0; i < behaviors_.size(); i++)
     {
         // sensingの実行
-        behaviors.at(i)->sensing();
+        behaviors_.at(i)->sensing();
         // 後のBehaviorを優先する
-        if(behaviors.at(i)->isActive())
-            active_behavior = i;
+        if(behaviors_.at(i)->isActive())
+            active_behavior = behaviors_.at(i).get();
     }
 
     // ActiveなBehaviorが無いなら何もしない
-    if(active_behavior == INVALID_LAYER)
+    if(active_behavior == NULL)
         return;
 
-    behaviors.at(active_behavior)->perform();
+    active_behavior->perform();
 }
 
-const int Agent::getNumBehaviors() const
+int Agent::getNumBehaviors() const
 {
-    return behaviors.size();
+    return static_cast<int>(behaviors_.size());
 }
 
 void Agent::addBehavior(const BehaviorPtr& new_behavior)
@@ -52,9 +52,9 @@ void Agent::addBehavior(const BehaviorPtr& new_behavior)
     int layer = convertFromIDtoLayer(new_behavior->getID());
 
     if(layer != INVALID_LAYER)
-        removeBehaviorAt(layer);
+        removeBehaviorAt(static_cast<unsigned int>(layer));
 
-    behaviors.push_back(new_behavior);
+    behaviors_.push_back(new_behavior);
 }
 
 void Agent::removeBehaviorAt(unsigned int layer)
@@ -62,9 +62,9 @@ void Agent::removeBehaviorAt(unsigned int layer)
     if( !isValidLayer(layer) )
         return;
 
-    BehaviorPtr target = behaviors.at(layer);
-    behaviors.erase(std::remove(behaviors.begin(), behaviors.end(), target),
-                    behaviors.end());
+    BehaviorPtr target = behaviors_.at(layer);
+    behaviors_.erase(std::remove(behaviors_.begin(), behaviors_.end(), target),
+                    behaviors_.end());
 }
 
 const BehaviorPtr Agent::getBehaviorAt(const unsigned int layer) const
@@ -72,7 +72,7 @@ const BehaviorPtr Agent::getBehaviorAt(const unsigned int layer) const
     if(!isValidLayer(layer))
         return BehaviorPtr();
 
-    return behaviors.at(layer);
+    return behaviors_.at(layer);
 }
 
 const BehaviorPtr Agent::getBehaviorByID(const unsigned int id) const
@@ -82,23 +82,23 @@ const BehaviorPtr Agent::getBehaviorByID(const unsigned int id) const
     if(layer == INVALID_LAYER)
         return BehaviorPtr();
 
-    return behaviors.at(static_cast<unsigned int>(layer));
+    return behaviors_.at(static_cast<unsigned int>(layer));
 }
 
-const int Agent::convertFromIDtoLayer(unsigned int id) const
+int Agent::convertFromIDtoLayer(unsigned int id) const
 {
     // 対象のIDを走査する
-    for(unsigned int i = 0; i < behaviors.size(); i++)
+    for(unsigned int i = 0; i < behaviors_.size(); i++)
     {
-        if(behaviors.at(i)->getID() == id)
-            return i;
+        if(behaviors_.at(i)->getID() == id)
+            return static_cast<int>(i);
     }
     // ヒットしなかった
     return INVALID_LAYER;
 }
 
-const bool Agent::isValidLayer(const unsigned int layer) const
+bool Agent::isValidLayer(const unsigned int layer) const
 {
-    return (layer < behaviors.size());
+    return (layer < behaviors_.size());
 }
 

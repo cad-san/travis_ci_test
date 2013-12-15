@@ -9,11 +9,11 @@ static const int INTERVAL_TIME = 500;
 #define TIME_UTC boost::TIME_UTC
 #endif
 
-Thread::Thread(const RunnerPtr& runner)
+Thread::Thread(const RunnerPtr& runner_ptr)
 {
     initFlags();
     this->setIntervalMiliSec(INTERVAL_TIME);
-    this->runner = runner;
+    this->runner_ = runner_ptr;
 }
 
 Thread::~Thread()
@@ -29,18 +29,22 @@ bool Thread::init()
         return false;
 
     /* Runnerの初期化 */
-    if(runner != NULL)
-        runner->init();
+    if(runner_ != NULL)
+        runner_->init();
 
     initFlags();
 
-    this->ready_flag = true;
+    this->ready_flag_ = true;
 
     return true;
 }
 
 bool Thread::start()
 {
+    /* Activeのとき無効 */
+    if(isActive())
+        return false;
+
     /* 未初期化時無効 */
     if(!isReady())
         return false;
@@ -71,19 +75,19 @@ void Thread::main()
     notifyStarting();
     for(;;)
     {
-        lock lk(message_guard);
+        lock lk(message_guard_);
 
         /* 終了判定 */
-        if(end_flag)
+        if(end_flag_)
             break;
 
         /* Stepの実行 */
-        if(runner != NULL)
-            runner->step();
+        if(runner_ != NULL)
+            runner_->step();
 
         /* Intervalに基づき待機 */
         expect_time = getNextTime(expect_time);
-        if(end_request.timed_wait(lk, static_cast<boost::xtime>(expect_time)))
+        if(end_request_.timed_wait(lk, static_cast<boost::xtime>(expect_time)))
             break;
     }
     notifyStopping();
@@ -96,25 +100,27 @@ void Thread::requestStarting()
     if(!isReady())
         return;
 
-    this->main_thread = ThreadPtr(new boost::thread(&Thread::main, this));
+    lock lk(message_guard_);
+    this->end_flag_ = false;
+    this->main_thread_ = ThreadPtr(new boost::thread(&Thread::main, this));
 }
 
 void Thread::waitStarting()
 {
     /* 未初期化時はブロック */
-    if(end_flag)
+    if(end_flag_)
         return;
 
-    lock lk(message_guard);
+    lock lk(message_guard_);
     while(!isActive())
-        active_request.wait(lk);
+        active_request_.wait(lk);
 }
 
 void Thread::notifyStarting()
 {
-    lock kl(message_guard);
-    active_flag = true;
-    active_request.notify_one();
+    lock kl(message_guard_);
+    active_flag_ = true;
+    active_request_.notify_one();
 }
 
 void Thread::requestStopping()
@@ -123,52 +129,52 @@ void Thread::requestStopping()
     if(!isActive())
         return;
 
-    lock kl(message_guard);
-    end_flag = true;
-    end_request.notify_one();
+    lock kl(message_guard_);
+    end_flag_ = true;
+    end_request_.notify_one();
 }
 
 void Thread::notifyStopping()
 {
-    lock kl(message_guard);
-    active_flag = false;
-    active_request.notify_one();
+    lock kl(message_guard_);
+    active_flag_ = false;
+    active_request_.notify_one();
 }
 
 void Thread::waitStopping()
 {
     /* 終了要求未発行ならブロック */
-    if(!end_flag)
+    if(!end_flag_)
         return;
 
-    main_thread->join();
+    main_thread_->join();
 }
 
 void Thread::initFlags()
 {
-    this->ready_flag = false;
-    this->active_flag = false;
-    this->end_flag = false;
+    this->ready_flag_ = false;
+    this->active_flag_ = false;
+    this->end_flag_ = false;
 }
 
-const bool Thread::isReady() const
+bool Thread::isReady() const
 {
-    return ready_flag;
+    return ready_flag_;
 }
 
-const bool Thread::isActive() const
+bool Thread::isActive() const
 {
-    return active_flag;
+    return active_flag_;
 }
 
 void Thread::setIntervalMiliSec(const int interval_msec)
 {
-    interval = static_cast<double>(interval_msec) / 1000;
+    interval_ = static_cast<double>(interval_msec) / 1000;
 }
 
 const UtilTime Thread::getIntervalTime() const
 {
-    return interval;
+    return interval_;
 }
 
 const UtilTime Thread::getBaseTime() const
@@ -180,5 +186,5 @@ const UtilTime Thread::getBaseTime() const
 
 const UtilTime Thread::getNextTime(const UtilTime& base) const
 {
-    return base + interval;
+    return base + interval_;
 }
