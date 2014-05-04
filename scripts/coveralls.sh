@@ -6,5 +6,5 @@ if [ "$CC" = "clang" ]; then
 fi
 
 if [ "$BUILD_TARGET" = "test" ]; then
-	coveralls --root gcov
+	coveralls --root gcov || exit 1
 fi
