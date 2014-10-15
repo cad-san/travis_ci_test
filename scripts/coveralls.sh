@@ -6,6 +6,6 @@ if [ "$CC" = "clang" ]; then
 fi
 
 if [ "$BUILD_TARGET" = "test" ]; then
-	coveralls --root . --build-root . --exclude cpputest || exit 1
+	coveralls --root . --build-root . --exclude cpputest --exclude tests --exclude mocks || exit 1
 fi
 
