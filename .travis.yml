@@ -1,7 +1,7 @@
 ---
 language: cpp
 compiler:
-  - gcc-4.8
+  - gcc
   - clang
 env:
   matrix:
@@ -11,7 +11,19 @@ env:
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq g++-4.8
+  -
+    if [ "$CXX" = "clang++" ];
+    then
+        sudo apt-get install -qq libstdc++-4.8-dev;
+    fi
+
+  -
+    if [ "$CXX" = "g++" ];
+    then
+        sudo apt-get install -qq g++-4.8;
+        export CXX="g++-4.8";
+        export CC="gcc-4.8";
+    fi
 install:
   - sudo apt-get install libboost-dev
   - sudo apt-get install libboost-thread-dev
