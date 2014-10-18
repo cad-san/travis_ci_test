@@ -37,6 +37,6 @@ install:
     fi
 before_script:
 script:
-  - ./scripts/travis_ci_build.sh
+  - $CXX sample/main.cpp -std=c++11 -pthread -o test && ./test
 after_success:
   - ./scripts/coveralls.sh
