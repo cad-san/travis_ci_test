@@ -1,13 +1,17 @@
 ---
 language: cpp
 compiler:
-  - gcc
+  - gcc-4.8
   - clang
 env:
   matrix:
   - BUILD_TARGET=test
   - BUILD_TARGET=release
   - BUILD_TARGET=sample_qt
+before_install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq g++-4.8
 install:
   - sudo apt-get install libboost-dev
   - sudo apt-get install libboost-thread-dev
